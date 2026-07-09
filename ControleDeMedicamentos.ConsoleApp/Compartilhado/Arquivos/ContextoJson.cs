@@ -1,24 +1,24 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ControleDeMedicamentos.ConsoleApp.Modulos.ModuloCategoria;
-using ControleDeMedicamentos.ConsoleApp.Modulos.ModuloListaCompras;
-using ControleDeMedicamentos.ConsoleApp.Modulos.ModuloProduto;
+using ControleDeMedicamentos.ConsoleApp.ModuloFornecedores;
+using ControleDeMedicamentos.ConsoleApp.ModuloMedicamentos;
+using ControleDeMedicamentos.ConsoleApp.ModuloRequisicoes;
 
 namespace ControleDeMedicamentos.ConsoleApp.Compartilhado.Arquivos;
 
 public class ContextoJson
 {
-    public List<Categoria> Categorias { get; set; } = new List<Categoria>();
-    public List<Produto> Produtos { get; set; } = new List<Produto>();
-    public List<ListaCompras> ListasDeCompras { get; set; } = new List<ListaCompras>();
-
     private readonly string caminhoArquivoDados;
+
+    public List<Fornecedor> Fornecedores { get; set; } = [];
+    public List<Medicamento> Medicamentos { get; set; } = [];
+    public List<RequisicaoEntrada> RequisicoesEntrada { get; set; } = [];
 
     public ContextoJson()
     {
         string caminhoAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        string caminhoDiretorioAplicativo = Path.Join(caminhoAppData, "ControleDeMedicamentos");
+        string caminhoDiretorioAplicativo = Path.Join(caminhoAppData, "ControleDeMedicamentos-Backend");
 
         Directory.CreateDirectory(caminhoDiretorioAplicativo);
 
@@ -53,8 +53,8 @@ public class ContextoJson
         if (contextoSalvo == null)
             return;
 
-        Categorias = contextoSalvo.Categorias;
-        Produtos = contextoSalvo.Produtos;
-        ListasDeCompras = contextoSalvo.ListasDeCompras;
+        Fornecedores = contextoSalvo.Fornecedores;
+        Medicamentos = contextoSalvo.Medicamentos;
+        RequisicoesEntrada = contextoSalvo.RequisicoesEntrada;
     }
 }

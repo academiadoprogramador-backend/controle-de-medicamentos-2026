@@ -5,7 +5,7 @@ namespace ControleDeMedicamentos.ConsoleApp.Compartilhado;
 public abstract class TelaBase<TEntidade> where TEntidade : EntidadeBase
 {
     private readonly string nomeEntidade = string.Empty;
-    private readonly RepositorioBaseEmArquivo<TEntidade> repositorio;
+    protected readonly RepositorioBaseEmArquivo<TEntidade> repositorio;
 
     protected TelaBase(string nomeEntidade, RepositorioBaseEmArquivo<TEntidade> repositorio)
     {

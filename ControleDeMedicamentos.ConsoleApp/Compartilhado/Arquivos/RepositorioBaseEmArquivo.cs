@@ -13,6 +13,16 @@ public abstract class RepositorioBaseEmArquivo<TEntidade> where TEntidade : Enti
 
     public void Cadastrar(TEntidade novoRegistro)
     {
+        int ultimoId = 0;
+
+        foreach (TEntidade r in registros)
+        {
+            if (r.Id > ultimoId)
+                ultimoId = r.Id;
+        }
+
+        novoRegistro.Id = ultimoId + 1;
+
         registros.Add(novoRegistro);
 
         contexto.Salvar();
