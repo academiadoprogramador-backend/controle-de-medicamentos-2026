@@ -29,24 +29,31 @@ public class TelaRequisicaoSaida : TelaBase<RequisicaoSaida>, ITelaOpcoes, ITela
             Console.WriteLine("---------------------------------");
         }
 
-        Console.WriteLine(
-            "{0, -7} | {1, -20} | {2, -20} | {3, -10} | {4, -15}",
-            "Id", "Paciente", "Medicamento", "Qtd", "Data"
-        );
-
         List<RequisicaoSaida> registros = repositorio.SelecionarTodos();
 
         foreach (RequisicaoSaida r in registros)
         {
+            Console.WriteLine("Id: {0} | Paciente: {1} | Data: {2}",
+                r.Id, r.Paciente.Nome, r.Data.ToShortDateString());
+
             Console.WriteLine(
-                "{0, -7} | {1, -20} | {2, -20} | {3, -10} | {4, -15}",
-                r.Id, r.Paciente.Nome, r.Medicamento.Nome, r.Quantidade, r.Data.ToShortDateString()
+                "{0, -7} | {1, -20} | {2, -10}",
+                "Id", "Medicamento", "Qtd"
             );
+
+            foreach (MedicamentoPrescrito mp in r.MedicamentosPrescritos)
+            {
+                Console.WriteLine(
+                    "{0, -7} | {1, -20} | {2, -10}",
+                    mp.Medicamento.Id, mp.Medicamento.Nome, mp.Quantidade
+                );
+            }
+
+            Console.WriteLine("---------------------------------");
         }
 
         if (deveExibirCabecalho)
         {
-            Console.WriteLine("---------------------------------");
             Console.Write("Digite ENTER para continuar...");
             Console.ReadLine();
         }
@@ -63,19 +70,29 @@ public class TelaRequisicaoSaida : TelaBase<RequisicaoSaida>, ITelaOpcoes, ITela
 
         Paciente paciente = repositorioPaciente.SelecionarPorId(idPaciente)!;
 
-        VisualizarMedicamentos();
+        List<MedicamentoPrescrito> medicamentosPrescritos = [];
 
-        Console.WriteLine("---------------------------------");
+        while (true)
+        {
+            VisualizarMedicamentos();
 
-        Console.Write("Digite o ID do medicamento que deseja requisitar: ");
-        int idMedicamento = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("---------------------------------");
 
-        Medicamento medicamento = repositorioMedicamento.SelecionarPorId(idMedicamento)!;
+            Console.Write("Digite o ID do medicamento (0 para finalizar): ");
+            int idMedicamento = Convert.ToInt32(Console.ReadLine());
 
-        Console.Write("Digite a quantidade que deseja requisitar: ");
-        int quantidade = Convert.ToInt32(Console.ReadLine());
+            if (idMedicamento == 0)
+                break;
 
-        return new RequisicaoSaida(paciente, medicamento, quantidade);
+            Medicamento medicamento = repositorioMedicamento.SelecionarPorId(idMedicamento)!;
+
+            Console.Write("Digite a quantidade: ");
+            int quantidade = Convert.ToInt32(Console.ReadLine());
+
+            medicamentosPrescritos.Add(new MedicamentoPrescrito(medicamento, quantidade));
+        }
+
+        return new RequisicaoSaida(paciente, medicamentosPrescritos);
     }
 
     private void VisualizarPacientes()
