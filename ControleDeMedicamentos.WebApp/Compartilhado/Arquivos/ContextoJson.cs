@@ -51,6 +51,12 @@ public class ContextoJson
 
         string jsonString = File.ReadAllText(caminhoArquivoDados);
 
+        if (string.IsNullOrWhiteSpace(jsonString))
+        {
+            Carregar(CarregarDadosPredefinidos());
+            return;
+        }
+
         JsonSerializerOptions options = new JsonSerializerOptions();
         options.WriteIndented = true;
         options.ReferenceHandler = ReferenceHandler.Preserve;
